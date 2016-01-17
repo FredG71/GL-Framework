@@ -1,4 +1,4 @@
-#include "Shaders.h"
+#include "Shader.h"
 
 template<typename T>
 std::string OpenShader(T&& FilePath)
@@ -14,15 +14,6 @@ std::string OpenShader(T&& FilePath)
             RetVal.append(TempByte + "\n");
         }
         File.close();
-    }
-    else
-    {
-#ifdef DEBUG
-        Logging::LogError("Failed to open shader: %s\n", FilePath);
-        abort();
-#else
-        Logging::LogError("Failed to open shader: %s\n", FilePath);
-#endif
     }
     return RetVal;
 }
@@ -50,7 +41,7 @@ void Shader::CompileShader(std::string VertexSource, std::string FragmentSource)
     if (!nSuccess)
     {
         glGetShaderInfoLog(FragmentShader, 512, NULL, Log);
-        Logging::LogError("FRAGMENT SHADER FAILED: %s", Log);
+        std::cout << "FRAGMENT SHADER FAILED: " << Log << std::endl;
     }
 
     VertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -64,7 +55,7 @@ void Shader::CompileShader(std::string VertexSource, std::string FragmentSource)
     if (!nSuccess)
     {
         glGetShaderInfoLog(VertexShader, 512, NULL, Log);
-        Logging::LogError("VERTEX SHADER FAILED: %s", Log);
+        std::cout << "VERTEX SHADER FAILED: " << Log << std::endl;
     }
 
     Program = glCreateProgram();
@@ -77,7 +68,7 @@ void Shader::CompileShader(std::string VertexSource, std::string FragmentSource)
     if (!nSuccess)
     {
         glGetProgramInfoLog(Program, 512, NULL, Log);
-        Logging::LogError("PROGRAM LINK FAILED: %s", Log);
+        std::cout << "PROGRAM LINK FAILED: " << Log << std::endl;
     }
     glDeleteShader(VertexShader);
     glDeleteShader(FragmentShader);
